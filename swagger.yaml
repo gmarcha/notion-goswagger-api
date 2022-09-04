@@ -1,0 +1,95 @@
+swagger: "2.0"
+
+info:
+  title: Notion API
+  description: An API to automate content creation on Notion.
+  contact: {}
+  version: "0.1"
+
+host: api:3001
+basePath: /v1
+schemes:
+  - http
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /tasks/campuses/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Campus ID.
+        type: string
+    post:
+      summary: Create campus tasks
+      description: Create campus tasks like onboarding steps, etc..
+      tags:
+        - Task
+      operationId: campusCreate
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Task'
+        "500":
+          $ref: '#/responses/500'
+  /tasks/pools/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Pool event ID.
+        type: string
+    post:
+      summary: Create pool tasks
+      description: Create a task list linked to pool setup.
+      tags:
+        - Task
+      operationId: poolCreate
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Task'
+        "500":
+          $ref: '#/responses/500'
+
+responses:
+  400:
+    description: Bad request
+    schema:
+      $ref: '#/definitions/Error'
+  500:
+    description: Internal Server Error
+    schema:
+      $ref: '#/definitions/Error'
+
+definitions:
+  Task:
+    type: object
+    properties:
+      name:
+        type: string
+      epicID:
+        type: string
+      priority:
+        type: string
+      step:
+        type: integer
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 500
+      message:
+        type: string
+        example: Error message
