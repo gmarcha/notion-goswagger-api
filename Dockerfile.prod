@@ -1,0 +1,13 @@
+FROM golang:alpine as build
+
+RUN mkdir /build
+COPY . /build
+WORKDIR /build
+
+CMD [ "go", "build", "-o", "bin/v1/main.out", "cmd/v1/main.go" ]
+
+FROM alpine
+
+COPY --from=build /build/bin/v1/main.out .
+
+CMD [ "./main.out", "--host", "0.0.0.0" ]

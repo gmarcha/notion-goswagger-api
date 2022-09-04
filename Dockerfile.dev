@@ -1,0 +1,7 @@
+FROM golang:alpine
+
+RUN go install github.com/codegangsta/gin@latest
+
+WORKDIR /build
+
+ENTRYPOINT [ "gin", "-i", "--bin", "bin/v1/main.out", "--build", "cmd/v1", "run", "--host", "0.0.0.0" ]
