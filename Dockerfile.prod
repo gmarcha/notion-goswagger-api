@@ -1,13 +1,14 @@
 FROM golang:alpine as build
 
-RUN mkdir /build
-COPY . /build
 WORKDIR /build
+COPY . .
 
 CMD [ "go", "build", "-o", "bin/v1/main.out", "cmd/v1/main.go" ]
 
 FROM alpine
 
+WORKDIR /usr/local/bin
+COPY .env .
 COPY --from=build /build/bin/v1/main.out .
 
-CMD [ "./main.out", "--host", "0.0.0.0" ]
+CMD [ "./main.out", "--host", "0.0.0.0", "--port", "80" ]
