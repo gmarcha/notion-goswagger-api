@@ -7,7 +7,6 @@ import (
 	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 
-	_ "github.com/gmarcha/notion-goswagger-api/internal/v1/env"
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi"
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations"
 )
