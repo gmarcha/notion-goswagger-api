@@ -1,23 +1,24 @@
 DOCKER-COMPOSE := docker compose
+PATH := docker-compose.yaml
 
 .PHONY: all
 all: build up
 
 .PHONY: build
 build:
-	$(DOCKER-COMPOSE) build
+	$(DOCKER-COMPOSE) -f $(PATH) build
 
 .PHONY: up
 up:
-	$(DOCKER-COMPOSE) up -d --remove-orphans
+	$(DOCKER-COMPOSE) -f $(PATH) up -d --remove-orphans
 
 .PHONY: down
 down:
-	$(DOCKER-COMPOSE) down
+	$(DOCKER-COMPOSE) -f $(PATH) down
 
 .PHONY: clean
 clean:
-	$(DOCKER-COMPOSE) down --volumes
+	$(DOCKER-COMPOSE) -f $(PATH) down --volumes
 
 .PHONY: gen
 gen:
