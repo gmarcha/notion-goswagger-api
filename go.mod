@@ -10,7 +10,6 @@ require (
 	github.com/go-openapi/strfmt v0.21.3
 	github.com/go-openapi/swag v0.22.3
 	github.com/jessevdk/go-flags v1.5.0
-	github.com/joho/godotenv v1.3.0
 	github.com/jomei/notionapi v1.9.0
 	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b
 )
