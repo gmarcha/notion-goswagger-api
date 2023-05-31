@@ -11,7 +11,7 @@ import (
 
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/client"
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations"
-	t "github.com/gmarcha/notion-goswagger-api/internal/v1/task"
+	"github.com/gmarcha/notion-goswagger-api/internal/v1/issue"
 )
 
 //go:generate swagger generate server --target ../../goswagger --name Notion --spec ../../../../swagger.yaml --principal interface{} --exclude-main
@@ -38,7 +38,7 @@ func configureAPI(api *operations.NotionAPI) http.Handler {
 	api.JSONProducer = runtime.JSONProducer()
 
 	notionClient := client.Notion(api)
-	t.Setup(api, notionClient)
+	issue.Setup(api, notionClient)
 
 	api.PreServerShutdown = func() {}
 	api.ServerShutdown = func() {}

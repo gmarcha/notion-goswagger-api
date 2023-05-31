@@ -8,11 +8,11 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-type campusCreate struct {
+type CampusCreate struct {
 	task *Service
 }
 
-func (s *campusCreate) Handle(params task.CampusCreateParams) middleware.Responder {
+func (s *CampusCreate) Handle(params task.CampusCreateParams) middleware.Responder {
 	ctx := context.Background()
 	res, err := s.task.CampusCreate(ctx, params.ID)
 	if err != nil {
@@ -22,11 +22,11 @@ func (s *campusCreate) Handle(params task.CampusCreateParams) middleware.Respond
 	return task.NewCampusCreateCreated().WithPayload(res)
 }
 
-type poolCreate struct {
+type PoolCreate struct {
 	task *Service
 }
 
-func (s *poolCreate) Handle(params task.PoolCreateParams) middleware.Responder {
+func (s *PoolCreate) Handle(params task.PoolCreateParams) middleware.Responder {
 	ctx := context.Background()
 	res, err := s.task.PoolCreate(ctx, params.ID)
 	if err != nil {

@@ -17,48 +17,76 @@ produces:
   - application/json
 
 paths:
-  /tasks/campuses/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        description: Campus ID.
-        type: string
-    post:
-      summary: Create campus tasks
-      description: Create campus tasks like onboarding steps, etc..
+  /campus/sync:
+    get:
+      summary: Synchronize campus page
+      description: Synchronize shared campus page with internal databases.
       tags:
-        - Task
-      operationId: campusCreate
+        - Campus
+      operationId: sync
       responses:
-        "201":
-          description: Created
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Task'
+        "204":
+          description: No content
         "500":
           $ref: '#/responses/500'
-  /tasks/pools/{id}:
-    parameters:
-      - in: path
-        name: id
-        required: true
-        description: Pool event ID.
-        type: string
+
+  /issues:
     post:
-      summary: Create pool tasks
-      description: Create a task list linked to pool setup.
+      summary: Create issue
+      description: Create an issue from Jira.
       tags:
-        - Task
-      operationId: poolCreate
+        - Issue
+      operationId: create
+      parameters:
+        - in: body
+          name: issue
+          required: true
+          description: Issue content.
+          schema:
+            $ref: '#/definitions/Issue'
       responses:
         "201":
           description: Created
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Task'
+            $ref: '#/definitions/Issue'
+        "500":
+          $ref: '#/responses/500'
+  /issues/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: Issue ID from Jira.
+        type: string
+    put:
+      summary: Update issue
+      description: Update an issue from Jira.
+      tags:
+        - Issue
+      operationId: update
+      parameters:
+        - in: body
+          name: issue
+          required: true
+          description: Issue content.
+          schema:
+            $ref: '#/definitions/Issue'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Issue'
+        "500":
+          $ref: '#/responses/500'
+    delete:
+      summary: Delete issue
+      description: Delete an issue from Jira.
+      tags:
+        - Issue
+      operationId: delete
+      responses:
+        "204":
+          description: No Content
         "500":
           $ref: '#/responses/500'
 
@@ -73,17 +101,17 @@ responses:
       $ref: '#/definitions/Error'
 
 definitions:
-  Task:
+  Issue:
     type: object
     properties:
       name:
         type: string
-      epicID:
+      status:
         type: string
-      priority:
+      type:
         type: string
-      step:
-        type: integer
+      jiraIssueID:
+        type: string
   Error:
     type: object
     properties:

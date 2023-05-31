@@ -19,7 +19,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations/task"
+	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations/campus"
+	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations/issue"
 )
 
 // NewNotionAPI creates a new Notion instance
@@ -44,11 +45,17 @@ func NewNotionAPI(spec *loads.Document) *NotionAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		TaskCampusCreateHandler: task.CampusCreateHandlerFunc(func(params task.CampusCreateParams) middleware.Responder {
-			return middleware.NotImplemented("operation task.CampusCreate has not yet been implemented")
+		IssueCreateHandler: issue.CreateHandlerFunc(func(params issue.CreateParams) middleware.Responder {
+			return middleware.NotImplemented("operation issue.Create has not yet been implemented")
 		}),
-		TaskPoolCreateHandler: task.PoolCreateHandlerFunc(func(params task.PoolCreateParams) middleware.Responder {
-			return middleware.NotImplemented("operation task.PoolCreate has not yet been implemented")
+		IssueDeleteHandler: issue.DeleteHandlerFunc(func(params issue.DeleteParams) middleware.Responder {
+			return middleware.NotImplemented("operation issue.Delete has not yet been implemented")
+		}),
+		CampusSyncHandler: campus.SyncHandlerFunc(func(params campus.SyncParams) middleware.Responder {
+			return middleware.NotImplemented("operation campus.Sync has not yet been implemented")
+		}),
+		IssueUpdateHandler: issue.UpdateHandlerFunc(func(params issue.UpdateParams) middleware.Responder {
+			return middleware.NotImplemented("operation issue.Update has not yet been implemented")
 		}),
 	}
 }
@@ -86,10 +93,14 @@ type NotionAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// TaskCampusCreateHandler sets the operation handler for the campus create operation
-	TaskCampusCreateHandler task.CampusCreateHandler
-	// TaskPoolCreateHandler sets the operation handler for the pool create operation
-	TaskPoolCreateHandler task.PoolCreateHandler
+	// IssueCreateHandler sets the operation handler for the create operation
+	IssueCreateHandler issue.CreateHandler
+	// IssueDeleteHandler sets the operation handler for the delete operation
+	IssueDeleteHandler issue.DeleteHandler
+	// CampusSyncHandler sets the operation handler for the sync operation
+	CampusSyncHandler campus.SyncHandler
+	// IssueUpdateHandler sets the operation handler for the update operation
+	IssueUpdateHandler issue.UpdateHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -167,11 +178,17 @@ func (o *NotionAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.TaskCampusCreateHandler == nil {
-		unregistered = append(unregistered, "task.CampusCreateHandler")
+	if o.IssueCreateHandler == nil {
+		unregistered = append(unregistered, "issue.CreateHandler")
 	}
-	if o.TaskPoolCreateHandler == nil {
-		unregistered = append(unregistered, "task.PoolCreateHandler")
+	if o.IssueDeleteHandler == nil {
+		unregistered = append(unregistered, "issue.DeleteHandler")
+	}
+	if o.CampusSyncHandler == nil {
+		unregistered = append(unregistered, "campus.SyncHandler")
+	}
+	if o.IssueUpdateHandler == nil {
+		unregistered = append(unregistered, "issue.UpdateHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -264,11 +281,19 @@ func (o *NotionAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/tasks/campuses/{id}"] = task.NewCampusCreate(o.context, o.TaskCampusCreateHandler)
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
+	o.handlers["POST"]["/issues"] = issue.NewCreate(o.context, o.IssueCreateHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/tasks/pools/{id}"] = task.NewPoolCreate(o.context, o.TaskPoolCreateHandler)
+	o.handlers["DELETE"]["/issues/{id}"] = issue.NewDelete(o.context, o.IssueDeleteHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/campus/sync"] = campus.NewSync(o.context, o.CampusSyncHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/issues/{id}"] = issue.NewUpdate(o.context, o.IssueUpdateHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

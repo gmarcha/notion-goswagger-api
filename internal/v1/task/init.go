@@ -7,8 +7,8 @@ import (
 
 func Setup(api *operations.NotionAPI, client *notionapi.Client) {
 
-	taskService := &Service{notion: client}
+	// taskService := &Service{notion: client}
 
-	api.TaskCampusCreateHandler = &campusCreate{task: taskService}
-	api.TaskPoolCreateHandler = &poolCreate{task: taskService}
+	// api.TaskCampusCreateHandler = &campusCreate{task: taskService}
+	// api.TaskPoolCreateHandler = &poolCreate{task: taskService}
 }

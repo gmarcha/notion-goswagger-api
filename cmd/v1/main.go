@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/go-openapi/loads"
@@ -9,13 +8,16 @@ import (
 
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi"
 	"github.com/gmarcha/notion-goswagger-api/internal/v1/goswagger/restapi/operations"
+	"github.com/gmarcha/notion-goswagger-api/internal/v1/log"
 )
 
 func main() {
 
+	defer log.Logger.Sync()
+
 	swaggerSpec, err := loads.Embedded(restapi.SwaggerJSON, restapi.FlatSwaggerJSON)
 	if err != nil {
-		log.Fatalln(err)
+		log.Logger.Fatal(err.Error())
 	}
 
 	api := operations.NewNotionAPI(swaggerSpec)
@@ -29,7 +31,7 @@ func main() {
 	for _, optsGroup := range api.CommandLineOptionsGroups {
 		_, err := parser.AddGroup(optsGroup.ShortDescription, optsGroup.LongDescription, optsGroup.Options)
 		if err != nil {
-			log.Fatalln(err)
+			log.Logger.Fatal(err.Error())
 		}
 	}
 
@@ -46,7 +48,7 @@ func main() {
 	server.ConfigureAPI()
 
 	if err := server.Serve(); err != nil {
-		log.Fatalln(err)
+		log.Logger.Fatal(err.Error())
 	}
 
 }

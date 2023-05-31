@@ -37,56 +37,97 @@ func init() {
   "host": "api:3001",
   "basePath": "/v1",
   "paths": {
-    "/tasks/campuses/{id}": {
-      "post": {
-        "description": "Create campus tasks like onboarding steps, etc..",
+    "/campus/sync": {
+      "get": {
+        "description": "Synchronize shared campus page with internal databases.",
         "tags": [
-          "Task"
+          "Campus"
         ],
-        "summary": "Create campus tasks",
-        "operationId": "campusCreate",
+        "summary": "Synchronize campus page",
+        "operationId": "sync",
         "responses": {
-          "201": {
-            "description": "Created",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Task"
-              }
-            }
+          "204": {
+            "description": "No content"
           },
           "500": {
             "$ref": "#/responses/500"
           }
         }
-      },
-      "parameters": [
-        {
-          "type": "string",
-          "description": "Campus ID.",
-          "name": "id",
-          "in": "path",
-          "required": true
-        }
-      ]
+      }
     },
-    "/tasks/pools/{id}": {
+    "/issues": {
       "post": {
-        "description": "Create a task list linked to pool setup.",
+        "description": "Create an issue from Jira.",
         "tags": [
-          "Task"
+          "Issue"
         ],
-        "summary": "Create pool tasks",
-        "operationId": "poolCreate",
+        "summary": "Create issue",
+        "operationId": "create",
+        "parameters": [
+          {
+            "description": "Issue content.",
+            "name": "issue",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Task"
-              }
+              "$ref": "#/definitions/Issue"
             }
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      }
+    },
+    "/issues/{id}": {
+      "put": {
+        "description": "Update an issue from Jira.",
+        "tags": [
+          "Issue"
+        ],
+        "summary": "Update issue",
+        "operationId": "update",
+        "parameters": [
+          {
+            "description": "Issue content.",
+            "name": "issue",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          },
+          "500": {
+            "$ref": "#/responses/500"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete an issue from Jira.",
+        "tags": [
+          "Issue"
+        ],
+        "summary": "Delete issue",
+        "operationId": "delete",
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "500": {
             "$ref": "#/responses/500"
@@ -96,7 +137,7 @@ func init() {
       "parameters": [
         {
           "type": "string",
-          "description": "Pool event ID.",
+          "description": "Issue ID from Jira.",
           "name": "id",
           "in": "path",
           "required": true
@@ -118,20 +159,20 @@ func init() {
         }
       }
     },
-    "Task": {
+    "Issue": {
       "type": "object",
       "properties": {
-        "epicID": {
+        "jiraIssueID": {
           "type": "string"
         },
         "name": {
           "type": "string"
         },
-        "priority": {
+        "status": {
           "type": "string"
         },
-        "step": {
-          "type": "integer"
+        "type": {
+          "type": "string"
         }
       }
     }
@@ -171,23 +212,17 @@ func init() {
   "host": "api:3001",
   "basePath": "/v1",
   "paths": {
-    "/tasks/campuses/{id}": {
-      "post": {
-        "description": "Create campus tasks like onboarding steps, etc..",
+    "/campus/sync": {
+      "get": {
+        "description": "Synchronize shared campus page with internal databases.",
         "tags": [
-          "Task"
+          "Campus"
         ],
-        "summary": "Create campus tasks",
-        "operationId": "campusCreate",
+        "summary": "Synchronize campus page",
+        "operationId": "sync",
         "responses": {
-          "201": {
-            "description": "Created",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Task"
-              }
-            }
+          "204": {
+            "description": "No content"
           },
           "500": {
             "description": "Internal Server Error",
@@ -196,34 +231,87 @@ func init() {
             }
           }
         }
-      },
-      "parameters": [
-        {
-          "type": "string",
-          "description": "Campus ID.",
-          "name": "id",
-          "in": "path",
-          "required": true
-        }
-      ]
+      }
     },
-    "/tasks/pools/{id}": {
+    "/issues": {
       "post": {
-        "description": "Create a task list linked to pool setup.",
+        "description": "Create an issue from Jira.",
         "tags": [
-          "Task"
+          "Issue"
         ],
-        "summary": "Create pool tasks",
-        "operationId": "poolCreate",
+        "summary": "Create issue",
+        "operationId": "create",
+        "parameters": [
+          {
+            "description": "Issue content.",
+            "name": "issue",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Task"
-              }
+              "$ref": "#/definitions/Issue"
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/issues/{id}": {
+      "put": {
+        "description": "Update an issue from Jira.",
+        "tags": [
+          "Issue"
+        ],
+        "summary": "Update issue",
+        "operationId": "update",
+        "parameters": [
+          {
+            "description": "Issue content.",
+            "name": "issue",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Issue"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete an issue from Jira.",
+        "tags": [
+          "Issue"
+        ],
+        "summary": "Delete issue",
+        "operationId": "delete",
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "500": {
             "description": "Internal Server Error",
@@ -236,7 +324,7 @@ func init() {
       "parameters": [
         {
           "type": "string",
-          "description": "Pool event ID.",
+          "description": "Issue ID from Jira.",
           "name": "id",
           "in": "path",
           "required": true
@@ -258,20 +346,20 @@ func init() {
         }
       }
     },
-    "Task": {
+    "Issue": {
       "type": "object",
       "properties": {
-        "epicID": {
+        "jiraIssueID": {
           "type": "string"
         },
         "name": {
           "type": "string"
         },
-        "priority": {
+        "status": {
           "type": "string"
         },
-        "step": {
-          "type": "integer"
+        "type": {
+          "type": "string"
         }
       }
     }
